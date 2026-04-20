@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SpeakUp! – Speech Practice for Kids</title>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -13,7 +12,7 @@
   --white:#FFFFFF;--dark:#2D2D5B;--bg:#F0EEFF;
 }
 html,body{height:100%}
-body{font-family:'Nunito',sans-serif;min-height:100vh;background:linear-gradient(145deg,#EAE4FF 0%,#FFF0FA 50%,#E4F6FF 100%);overflow-x:hidden;position:relative}
+body{font-family: 'Segoe UI', 'Trebuchet MS', Arial, sans-serif;min-height:100vh;background:linear-gradient(145deg,#EAE4FF 0%,#FFF0FA 50%,#E4F6FF 100%);overflow-x:hidden;position:relative}
 
 /* ── Floating bubbles ── */
 .bubbles{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
@@ -33,11 +32,11 @@ body{font-family:'Nunito',sans-serif;min-height:100vh;background:linear-gradient
 .mascot-wrap{display:flex;justify-content:center;margin-bottom:.5rem}
 .mascot-svg{width:130px;height:130px;animation:mascotBounce 2.5s ease-in-out infinite}
 @keyframes mascotBounce{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-14px) rotate(2deg)}}
-.app-title{font-family:'Fredoka One',sans-serif;font-size:clamp(3rem,9vw,5.5rem);color:var(--dark);letter-spacing:2px;line-height:1}
+.app-title{font-family: 'Segoe UI', 'Trebuchet MS', Arial, sans-serif;font-size:clamp(3rem,9vw,5.5rem);color:var(--dark);letter-spacing:2px;line-height:1}
 .app-title span{color:var(--coral)}
 .app-tagline{font-size:1.15rem;font-weight:800;color:#8888BB;margin-top:.4rem}
 
-.section-label{font-family:'Fredoka One',sans-serif;font-size:1.4rem;color:var(--dark);opacity:.75;margin-bottom:1.25rem;align-self:flex-start;max-width:760px;width:100%}
+.section-label{font-family: 'Segoe UI', 'Trebuchet MS', Arial, sans-serif;font-size:1.4rem;color:var(--dark);opacity:.75;margin-bottom:1.25rem;align-self:flex-start;max-width:760px;width:100%}
 
 .cats{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1.25rem;width:100%;max-width:760px}
 .cat-card{background:var(--white);border-radius:28px;padding:2rem 1.5rem;text-align:center;cursor:pointer;
@@ -49,7 +48,7 @@ body{font-family:'Nunito',sans-serif;min-height:100vh;background:linear-gradient
 .cat-card.words{border-color:var(--teal)}
 .cat-card.phrases{border-color:var(--purple)}
 .cat-icon{font-size:3.5rem;display:block;margin-bottom:.6rem}
-.cat-name{font-family:'Fredoka One',sans-serif;font-size:1.8rem;color:var(--dark);margin-bottom:.2rem}
+.cat-name{font-family: 'Segoe UI', 'Trebuchet MS', Arial, sans-serif;font-size:1.8rem;color:var(--dark);margin-bottom:.2rem}
 .cat-desc{font-size:.88rem;color:#9999BB;font-weight:800}
 .cat-badge{display:inline-block;margin-top:.7rem;padding:4px 14px;border-radius:999px;font-size:.82rem;font-weight:900}
 .vowels .cat-badge{background:#FFE8E8;color:#CC3333}
@@ -59,7 +58,7 @@ body{font-family:'Nunito',sans-serif;min-height:100vh;background:linear-gradient
 /* ──────────────────── PRACTICE ──────────────────── */
 .prac-header{width:100%;max-width:600px;display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
 .back-btn{background:var(--white);border:none;border-radius:16px;padding:10px 20px;
-  font-family:'Fredoka One',sans-serif;font-size:1rem;color:var(--dark);cursor:pointer;
+  font-family: 'Segoe UI', 'Trebuchet MS', Arial, sans-serif;font-size:1rem;color:var(--dark);cursor:pointer;
   box-shadow:0 4px 14px rgba(0,0,0,.09);transition:transform .15s}
 .back-btn:hover{transform:translateX(-4px)}
 
@@ -69,7 +68,7 @@ body{font-family:'Nunito',sans-serif;min-height:100vh;background:linear-gradient
 .pdot.current{background:var(--yellow);transform:scale(1.4)}
 
 .score-badge{background:var(--white);border-radius:16px;padding:8px 18px;
-  font-family:'Fredoka One',sans-serif;font-size:1.05rem;color:var(--dark);
+  font-family: 'Segoe UI', 'Trebuchet MS', Arial, sans-serif;font-size:1.05rem;color:var(--dark);
   box-shadow:0 4px 14px rgba(0,0,0,.09)}
 .score-badge span{color:var(--green)}
 
@@ -81,12 +80,12 @@ body{font-family:'Nunito',sans-serif;min-height:100vh;background:linear-gradient
   background:radial-gradient(circle at 70% 20%,rgba(255,255,255,.6) 0%,transparent 60%);pointer-events:none}
 .word-emoji{font-size:5.5rem;display:block;margin-bottom:.9rem;animation:emojiWiggle 3s ease-in-out infinite}
 @keyframes emojiWiggle{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
-.word-text{font-family:'Fredoka One',sans-serif;font-size:clamp(3.2rem,10vw,5.5rem);color:var(--dark);line-height:1;margin-bottom:.4rem}
+.word-text{font-family: 'Segoe UI', 'Trebuchet MS', Arial, sans-serif;font-size:clamp(3.2rem,10vw,5.5rem);color:var(--dark);line-height:1;margin-bottom:.4rem}
 .word-hint{font-size:.95rem;color:#AAAAC8;font-weight:800;margin-top:.2rem}
 
 /* Buttons row */
 .action-row{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;max-width:480px;width:100%;margin-bottom:1.25rem}
-.action-btn{border:none;border-radius:22px;padding:1.1rem 2rem;font-family:'Fredoka One',sans-serif;
+.action-btn{border:none;border-radius:22px;padding:1.1rem 2rem;font-family: 'Segoe UI', 'Trebuchet MS', Arial, sans-serif;
   font-size:1.3rem;cursor:pointer;display:flex;align-items:center;gap:10px;
   transition:transform .22s cubic-bezier(.34,1.56,.64,1),box-shadow .22s;
   box-shadow:0 6px 22px rgba(0,0,0,.13);flex:1;justify-content:center;min-width:140px}
@@ -119,11 +118,11 @@ body{font-family:'Nunito',sans-serif;min-height:100vh;background:linear-gradient
   text-align:center;max-width:360px;width:100%;animation:popIn .4s cubic-bezier(.34,1.56,.64,1)}
 @keyframes popIn{0%{transform:scale(.4) rotate(-8deg);opacity:0}100%{transform:scale(1) rotate(0deg);opacity:1}}
 .result-icon{font-size:5rem;display:block;margin-bottom:.8rem}
-.result-title{font-family:'Fredoka One',sans-serif;font-size:2rem;margin-bottom:.5rem}
+.result-title{font-family: 'Segoe UI', 'Trebuchet MS', Arial, sans-serif;font-size:2rem;margin-bottom:.5rem}
 .result-title.ok{color:var(--green)}.result-title.ng{color:var(--orange)}
 .result-said{font-size:.95rem;color:#AAAAC8;font-weight:800;margin-bottom:1.5rem;line-height:1.6}
 .res-btn{display:block;width:100%;border:none;border-radius:18px;padding:1rem;
-  font-family:'Fredoka One',sans-serif;font-size:1.3rem;cursor:pointer;
+  font-family: 'Segoe UI', 'Trebuchet MS', Arial, sans-serif;font-size:1.3rem;cursor:pointer;
   margin-bottom:.75rem;transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .2s;
   box-shadow:0 6px 18px rgba(0,0,0,.1)}
 .res-btn:hover{transform:scale(1.04);box-shadow:0 10px 28px rgba(0,0,0,.14)}
@@ -157,17 +156,17 @@ body{font-family:'Nunito',sans-serif;min-height:100vh;background:linear-gradient
   text-align:center;max-width:420px;width:100%;box-shadow:0 14px 44px rgba(0,0,0,.12);
   animation:popIn .5s cubic-bezier(.34,1.56,.64,1)}
 .complete-icon{font-size:6rem;display:block;margin-bottom:1rem;animation:emojiWiggle 2s ease-in-out infinite}
-.complete-title{font-family:'Fredoka One',sans-serif;font-size:2.2rem;color:var(--dark);margin-bottom:.5rem}
+.complete-title{font-family: 'Segoe UI', 'Trebuchet MS', Arial, sans-serif;font-size:2.2rem;color:var(--dark);margin-bottom:.5rem}
 .complete-sub{font-size:1rem;font-weight:800;color:#9999BB;margin-bottom:1.5rem}
 .complete-bar-wrap{background:#F0EEF8;border-radius:999px;height:18px;margin-bottom:1.5rem;overflow:hidden}
 .complete-bar{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--teal),var(--purple));
   transition:width 1.2s cubic-bezier(.16,1,.3,1)}
 .complete-stats{display:flex;gap:1rem;justify-content:center;margin-bottom:2rem}
 .cstat{flex:1;background:#F5F3FF;border-radius:16px;padding:.8rem .5rem}
-.cstat-num{font-family:'Fredoka One',sans-serif;font-size:2rem;color:var(--purple);display:block}
+.cstat-num{font-family: 'Segoe UI', 'Trebuchet MS', Arial, sans-serif;font-size:2rem;color:var(--purple);display:block}
 .cstat-lbl{font-size:.82rem;font-weight:800;color:#AAAAC8}
 .home-btn{display:block;width:100%;border:none;border-radius:20px;padding:1.1rem;
-  font-family:'Fredoka One',sans-serif;font-size:1.4rem;cursor:pointer;
+  font-family: 'Segoe UI', 'Trebuchet MS', Arial, sans-serif;font-size:1.4rem;cursor:pointer;
   background:var(--coral);color:var(--white);box-shadow:0 6px 22px rgba(255,107,107,.35);
   transition:transform .2s;margin-top:.5rem}
 .home-btn:hover{transform:scale(1.04)}
@@ -704,41 +703,61 @@ function testMicrophone(){
   
   let heardSomething=false;
   let timeout;
+  let testComplete=false;
   
   // Show testing message
-  const origStatus=document.getElementById('status-bar').textContent;
-  setStatus('🎤 Testing microphone... say something!','listening');
+  setStatus('🎤 Testing microphone... SPEAK LOUD & CLEAR!','listening');
   
   testRecog.onstart=()=>{
-    console.log('🎤 Test started - speak into your microphone');
+    console.log('🎤 Test started - SPEAK NOW INTO YOUR MICROPHONE!');
+    setStatus('🔴 LISTENING... Say hello, cat, or anything!','listening');
+    // Give 10 seconds to speak
     timeout=setTimeout(()=>{
-      testRecog.abort();
-      if(!heardSomething){
+      if(!testComplete && !heardSomething){
+        console.log('⏱️ Timeout: No speech detected');
+        testComplete=true;
+        try{testRecog.abort();}catch(e){}
         setStatus('❌ No sound detected. Check your microphone!','wrong');
-        alert('❌ MICROPHONE TEST FAILED\n\nNo sound detected.\n\nFix:\n1. Check microphone is plugged in\n2. Check volume is not muted\n3. Try another app (Discord/Zoom) to test\n4. Refresh this page and try again');
+        alert('❌ MICROPHONE TEST FAILED\n\nNo sound detected.\n\nFix:\n1. Check microphone is plugged in\n2. Check volume is not muted\n3. Try another app (Discord/Zoom) to test\n4. Move closer to the microphone\n5. Refresh this page and try again');
       }
-    },4000);
+    },10000);
   };
   
   testRecog.onresult=e=>{
+    if(testComplete)return;
+    
+    let bestTranscript='';
     for(let i=0;i<e.results.length;i++){
-      if(e.results[i][0].transcript.trim().length>0){
-        heardSomething=true;
-        const heard=e.results[i][0].transcript;
-        console.log('✅ Heard:',heard);
-        testRecog.abort();
-        setStatus('✅ Microphone works! Heard: "'+heard+'"','correct');
-        alert('✅ SUCCESS!\n\nYour microphone is working!\n\nHeard: "'+heard+'"\n\nNow try the speech practice app!');
-        break;
+      const t=e.results[i][0].transcript.trim();
+      if(t.length>0){
+        if(e.results[i].isFinal){
+          bestTranscript=t;
+        }
       }
+    }
+    
+    if(bestTranscript){
+      heardSomething=true;
+      console.log('✅ Heard:',bestTranscript);
+      testComplete=true;
+      clearTimeout(timeout);
+      try{testRecog.abort();}catch(e){}
+      setStatus('✅ Microphone works! Heard: "'+bestTranscript+'"','correct');
+      alert('✅ SUCCESS!\n\nYour microphone is working!\n\nHeard: "'+bestTranscript+'"\n\nNow try the speech practice app!');
     }
   };
   
   testRecog.onerror=e=>{
+    if(testComplete)return;
+    
     console.error('Test error:',e.error);
-    testRecog.abort();
+    testComplete=true;
+    clearTimeout(timeout);
+    try{testRecog.abort();}catch(err){}
+    
     const msgs={
-      'no-speech':'❌ No speech detected',
+      'no-speech':'❌ No speech detected - SPEAK LOUDER',
+      'aborted':'⚠️ Test stopped - try again',
       'not-allowed':'❌ Microphone access denied',
       'audio-capture':'❌ No microphone found',
       'network':'❌ Network error',
@@ -746,14 +765,19 @@ function testMicrophone(){
     };
     const msg=msgs[e.error]||'❌ Error: '+e.error;
     setStatus(msg,'wrong');
-    alert('🚫 MICROPHONE PROBLEM\n\nError: '+msg+'\n\nFix:\n1. Grant microphone permission when asked\n2. Check browser settings\n3. Try a different browser\n4. Refresh the page');
+    
+    if(e.error==='aborted'){
+      alert('⚠️ TEST WAS INTERRUPTED\n\nPlease try again:\n1. Click the test button again\n2. Speak clearly when it says "LISTENING"\n3. Wait for the result');
+    }else{
+      alert('🚫 MICROPHONE PROBLEM\n\nError: '+msg+'\n\nFix:\n1. Grant microphone permission when asked\n2. Check browser settings\n3. Try a different browser\n4. Refresh the page');
+    }
   };
   
   try{
     testRecog.start();
   }catch(err){
     console.error('Test start failed:',err);
-    alert('Failed to start test. Refresh page.');
+    alert('Failed to start test. Refresh page and try again.');
   }
 }
 </script>
