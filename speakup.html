@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SpeakUp! – Speech Practice for Kids</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --coral:#FF6B6B;--teal:#26D0CE;--purple:#A78BFA;--yellow:#FFD93D;
+  --green:#6BCB77;--blue:#4DB8FF;--orange:#FFA552;--pink:#FF8ED4;
+  --white:#FFFFFF;--dark:#2D2D5B;--bg:#F0EEFF;
+}
+html,body{height:100%}
+body{font-family:'Nunito',sans-serif;min-height:100vh;background:linear-gradient(145deg,#EAE4FF 0%,#FFF0FA 50%,#E4F6FF 100%);overflow-x:hidden;position:relative}
+
+/* ── Floating bubbles ── */
+.bubbles{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+.bubble{position:absolute;border-radius:50%;opacity:.1;animation:floatUp linear infinite}
+@keyframes floatUp{
+  0%{transform:translateY(110vh) scale(0);opacity:0}
+  10%{opacity:.1}90%{opacity:.1}
+  100%{transform:translateY(-20vh) scale(1);opacity:0}
+}
+
+/* ── Pages ── */
+.page{display:none;flex-direction:column;align-items:center;min-height:100vh;padding:2rem 1rem 3rem;position:relative;z-index:1}
+.page.active{display:flex}
+
+/* ──────────────────── HOME ──────────────────── */
+.home-top{text-align:center;margin-bottom:2rem}
+.mascot-wrap{display:flex;justify-content:center;margin-bottom:.5rem}
+.mascot-svg{width:130px;height:130px;animation:mascotBounce 2.5s ease-in-out infinite}
+@keyframes mascotBounce{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-14px) rotate(2deg)}}
+.app-title{font-family:'Fredoka One',sans-serif;font-size:clamp(3rem,9vw,5.5rem);color:var(--dark);letter-spacing:2px;line-height:1}
+.app-title span{color:var(--coral)}
+.app-tagline{font-size:1.15rem;font-weight:800;color:#8888BB;margin-top:.4rem}
+
+.section-label{font-family:'Fredoka One',sans-serif;font-size:1.4rem;color:var(--dark);opacity:.75;margin-bottom:1.25rem;align-self:flex-start;max-width:760px;width:100%}
+
+.cats{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1.25rem;width:100%;max-width:760px}
+.cat-card{background:var(--white);border-radius:28px;padding:2rem 1.5rem;text-align:center;cursor:pointer;
+  transition:transform .22s cubic-bezier(.34,1.56,.64,1),box-shadow .22s;
+  border:4px solid transparent;box-shadow:0 8px 28px rgba(0,0,0,.09);user-select:none}
+.cat-card:hover{transform:translateY(-8px) scale(1.02);box-shadow:0 18px 44px rgba(0,0,0,.13)}
+.cat-card:active{transform:scale(.95)}
+.cat-card.vowels{border-color:var(--coral)}
+.cat-card.words{border-color:var(--teal)}
+.cat-card.phrases{border-color:var(--purple)}
+.cat-icon{font-size:3.5rem;display:block;margin-bottom:.6rem}
+.cat-name{font-family:'Fredoka One',sans-serif;font-size:1.8rem;color:var(--dark);margin-bottom:.2rem}
+.cat-desc{font-size:.88rem;color:#9999BB;font-weight:800}
+.cat-badge{display:inline-block;margin-top:.7rem;padding:4px 14px;border-radius:999px;font-size:.82rem;font-weight:900}
+.vowels .cat-badge{background:#FFE8E8;color:#CC3333}
+.words .cat-badge{background:#E0FAFB;color:#0F7F84}
+.phrases .cat-badge{background:#EDE7FF;color:#6833CC}
+
+/* ──────────────────── PRACTICE ──────────────────── */
+.prac-header{width:100%;max-width:600px;display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+.back-btn{background:var(--white);border:none;border-radius:16px;padding:10px 20px;
+  font-family:'Fredoka One',sans-serif;font-size:1rem;color:var(--dark);cursor:pointer;
+  box-shadow:0 4px 14px rgba(0,0,0,.09);transition:transform .15s}
+.back-btn:hover{transform:translateX(-4px)}
+
+.progress-dots{display:flex;gap:8px;align-items:center}
+.pdot{width:13px;height:13px;border-radius:50%;background:#DDD;transition:background .3s,transform .3s}
+.pdot.done{background:var(--green)}
+.pdot.current{background:var(--yellow);transform:scale(1.4)}
+
+.score-badge{background:var(--white);border-radius:16px;padding:8px 18px;
+  font-family:'Fredoka One',sans-serif;font-size:1.05rem;color:var(--dark);
+  box-shadow:0 4px 14px rgba(0,0,0,.09)}
+.score-badge span{color:var(--green)}
+
+/* Word card */
+.word-card{background:var(--white);border-radius:40px;padding:2.5rem 3rem;text-align:center;
+  box-shadow:0 14px 44px rgba(0,0,0,.11);max-width:480px;width:100%;margin-bottom:1.5rem;
+  position:relative;overflow:hidden;transition:transform .3s}
+.word-card::before{content:'';position:absolute;inset:0;border-radius:40px;
+  background:radial-gradient(circle at 70% 20%,rgba(255,255,255,.6) 0%,transparent 60%);pointer-events:none}
+.word-emoji{font-size:5.5rem;display:block;margin-bottom:.9rem;animation:emojiWiggle 3s ease-in-out infinite}
+@keyframes emojiWiggle{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+.word-text{font-family:'Fredoka One',sans-serif;font-size:clamp(3.2rem,10vw,5.5rem);color:var(--dark);line-height:1;margin-bottom:.4rem}
+.word-hint{font-size:.95rem;color:#AAAAC8;font-weight:800;margin-top:.2rem}
+
+/* Buttons row */
+.action-row{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;max-width:480px;width:100%;margin-bottom:1.25rem}
+.action-btn{border:none;border-radius:22px;padding:1.1rem 2rem;font-family:'Fredoka One',sans-serif;
+  font-size:1.3rem;cursor:pointer;display:flex;align-items:center;gap:10px;
+  transition:transform .22s cubic-bezier(.34,1.56,.64,1),box-shadow .22s;
+  box-shadow:0 6px 22px rgba(0,0,0,.13);flex:1;justify-content:center;min-width:140px}
+.action-btn:hover{transform:translateY(-5px) scale(1.04);box-shadow:0 14px 34px rgba(0,0,0,.16)}
+.action-btn:active{transform:scale(.95);box-shadow:0 2px 8px rgba(0,0,0,.09)}
+.action-btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.listen-btn{background:var(--blue);color:var(--white)}
+.speak-btn{background:var(--coral);color:var(--white)}
+.speak-btn.recording{background:var(--green);animation:micPulse 1s ease-in-out infinite}
+@keyframes micPulse{
+  0%,100%{box-shadow:0 6px 22px rgba(107,203,119,.45)}
+  50%{box-shadow:0 6px 42px rgba(107,203,119,.75);transform:scale(1.06)}
+}
+
+/* Status bar */
+.status-bar{max-width:480px;width:100%;background:var(--white);border-radius:20px;
+  padding:1rem 1.5rem;text-align:center;font-size:1.05rem;font-weight:800;
+  color:#8888AA;box-shadow:0 4px 16px rgba(0,0,0,.07);
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  min-height:58px;transition:all .3s;border:3px solid transparent}
+.status-bar.listening{background:#E8F6FF;color:#1460A0;border-color:var(--blue)}
+.status-bar.correct{background:#EAFFF0;color:#1E7840;border-color:var(--green)}
+.status-bar.wrong{background:#FFF4E8;color:#A05010;border-color:var(--orange)}
+
+/* ──────────────────── RESULT OVERLAY ──────────────────── */
+.overlay{display:none;position:fixed;inset:0;background:rgba(20,10,50,.5);
+  z-index:100;align-items:center;justify-content:center;padding:1rem}
+.overlay.show{display:flex}
+.result-card{background:var(--white);border-radius:36px;padding:2.5rem 2rem;
+  text-align:center;max-width:360px;width:100%;animation:popIn .4s cubic-bezier(.34,1.56,.64,1)}
+@keyframes popIn{0%{transform:scale(.4) rotate(-8deg);opacity:0}100%{transform:scale(1) rotate(0deg);opacity:1}}
+.result-icon{font-size:5rem;display:block;margin-bottom:.8rem}
+.result-title{font-family:'Fredoka One',sans-serif;font-size:2rem;margin-bottom:.5rem}
+.result-title.ok{color:var(--green)}.result-title.ng{color:var(--orange)}
+.result-said{font-size:.95rem;color:#AAAAC8;font-weight:800;margin-bottom:1.5rem;line-height:1.6}
+.res-btn{display:block;width:100%;border:none;border-radius:18px;padding:1rem;
+  font-family:'Fredoka One',sans-serif;font-size:1.3rem;cursor:pointer;
+  margin-bottom:.75rem;transition:transform .2s cubic-bezier(.34,1.56,.64,1),box-shadow .2s;
+  box-shadow:0 6px 18px rgba(0,0,0,.1)}
+.res-btn:hover{transform:scale(1.04);box-shadow:0 10px 28px rgba(0,0,0,.14)}
+.res-btn.next{background:var(--teal);color:var(--white)}
+.res-btn.retry{background:var(--yellow);color:var(--dark)}
+
+/* ──────────────────── ANIMATIONS ──────────────────── */
+@keyframes shake{
+  0%,100%{transform:translateX(0)}
+  20%{transform:translateX(-12px)}40%{transform:translateX(12px)}
+  60%{transform:translateX(-9px)}80%{transform:translateX(9px)}
+}
+.shake{animation:shake .5s ease-in-out}
+
+.confetti-bit{position:fixed;top:-20px;pointer-events:none;z-index:9999;
+  animation:confettiFall linear forwards}
+@keyframes confettiFall{
+  0%{transform:translateY(0) rotate(0deg);opacity:1}
+  80%{opacity:1}100%{transform:translateY(105vh) rotate(720deg);opacity:0}
+}
+.star-burst{position:fixed;pointer-events:none;z-index:9998;font-size:2rem;
+  animation:starBurst .9s ease-out forwards}
+@keyframes starBurst{
+  0%{transform:scale(0) rotate(0);opacity:0}
+  40%{opacity:1}
+  100%{transform:scale(2) rotate(200deg);opacity:0}
+}
+
+/* ──────────────────── COMPLETE SCREEN ──────────────────── */
+.complete-card{background:var(--white);border-radius:40px;padding:3rem 2.5rem;
+  text-align:center;max-width:420px;width:100%;box-shadow:0 14px 44px rgba(0,0,0,.12);
+  animation:popIn .5s cubic-bezier(.34,1.56,.64,1)}
+.complete-icon{font-size:6rem;display:block;margin-bottom:1rem;animation:emojiWiggle 2s ease-in-out infinite}
+.complete-title{font-family:'Fredoka One',sans-serif;font-size:2.2rem;color:var(--dark);margin-bottom:.5rem}
+.complete-sub{font-size:1rem;font-weight:800;color:#9999BB;margin-bottom:1.5rem}
+.complete-bar-wrap{background:#F0EEF8;border-radius:999px;height:18px;margin-bottom:1.5rem;overflow:hidden}
+.complete-bar{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--teal),var(--purple));
+  transition:width 1.2s cubic-bezier(.16,1,.3,1)}
+.complete-stats{display:flex;gap:1rem;justify-content:center;margin-bottom:2rem}
+.cstat{flex:1;background:#F5F3FF;border-radius:16px;padding:.8rem .5rem}
+.cstat-num{font-family:'Fredoka One',sans-serif;font-size:2rem;color:var(--purple);display:block}
+.cstat-lbl{font-size:.82rem;font-weight:800;color:#AAAAC8}
+.home-btn{display:block;width:100%;border:none;border-radius:20px;padding:1.1rem;
+  font-family:'Fredoka One',sans-serif;font-size:1.4rem;cursor:pointer;
+  background:var(--coral);color:var(--white);box-shadow:0 6px 22px rgba(255,107,107,.35);
+  transition:transform .2s;margin-top:.5rem}
+.home-btn:hover{transform:scale(1.04)}
+
+/* ──────────────────── MIC VISUALISER ──────────────────── */
+.mic-wave{display:none;align-items:flex-end;justify-content:center;gap:5px;height:36px;margin-top:.5rem}
+.mic-wave.active{display:flex}
+.wave-bar{width:6px;border-radius:3px;background:var(--green);animation:waveAnim .6s ease-in-out infinite alternate}
+@keyframes waveAnim{0%{height:8px}100%{height:28px}}
+.wb1{animation-delay:0s}.wb2{animation-delay:.1s}.wb3{animation-delay:.2s}
+.wb4{animation-delay:.1s}.wb5{animation-delay:0s}
+</style>
+</head>
+<body>
+
+<!-- Bubbles -->
+<div class="bubbles" id="bubbles"></div>
+
+<!-- ════════════════ HOME PAGE ════════════════ -->
+<div class="page active" id="page-home">
+  <div class="home-top">
+    <div class="mascot-wrap">
+      <svg class="mascot-svg" viewBox="0 0 130 130" xmlns="http://www.w3.org/2000/svg">
+        <!-- Star body -->
+        <polygon points="65,8 78,45 118,45 87,68 98,105 65,82 32,105 43,68 12,45 52,45"
+          fill="#FFD93D" stroke="#F5C200" stroke-width="2.5" stroke-linejoin="round"/>
+        <!-- Face white bg -->
+        <ellipse cx="65" cy="62" rx="26" ry="24" fill="white" opacity=".55"/>
+        <!-- Eyes -->
+        <ellipse cx="53" cy="60" rx="8" ry="9" fill="white"/>
+        <ellipse cx="77" cy="60" rx="8" ry="9" fill="white"/>
+        <circle cx="55.5" cy="62" r="5" fill="#2D2D5B"/>
+        <circle cx="79.5" cy="62" r="5" fill="#2D2D5B"/>
+        <circle cx="57" cy="60" r="1.8" fill="white"/>
+        <circle cx="81" cy="60" r="1.8" fill="white"/>
+        <!-- Smile -->
+        <path d="M53 74 Q65 85 77 74" fill="none" stroke="#2D2D5B" stroke-width="3" stroke-linecap="round"/>
+        <!-- Cheeks -->
+        <ellipse cx="42" cy="72" rx="8" ry="6" fill="#FF8ED4" opacity=".55"/>
+        <ellipse cx="88" cy="72" rx="8" ry="6" fill="#FF8ED4" opacity=".55"/>
+        <!-- Little mouth sound waves -->
+        <path d="M95 42 Q100 38 95 34" fill="none" stroke="#FF6B6B" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M102 46 Q110 38 102 30" fill="none" stroke="#FF6B6B" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <h1 class="app-title">Speak<span>Up!</span></h1>
+    <p class="app-tagline">Let's practice talking together! 🌈</p>
+  </div>
+
+  <p class="section-label">Choose a category to start:</p>
+
+  <div style="text-align:center;margin-bottom:1.5rem">
+    <button onclick="testMicrophone()" style="background:#FF8ED4;border:none;border-radius:14px;padding:0.7rem 1.5rem;font-family:'Fredoka One';font-size:0.95rem;cursor:pointer;color:white;box-shadow:0 4px 12px rgba(0,0,0,0.1);">
+      🎤 Test Microphone First
+    </button>
+  </div>
+
+  <div class="cats">
+    <div class="cat-card vowels" onclick="startCategory('vowels')">
+      <span class="cat-icon">🔤</span>
+      <div class="cat-name">Vowels</div>
+      <div class="cat-desc">A · E · I · O · U sounds</div>
+      <span class="cat-badge">5 letters</span>
+    </div>
+    <div class="cat-card words" onclick="startCategory('words')">
+      <span class="cat-icon">🐱</span>
+      <div class="cat-name">Words</div>
+      <div class="cat-desc">Simple everyday words</div>
+      <span class="cat-badge">10 words</span>
+    </div>
+    <div class="cat-card phrases" onclick="startCategory('phrases')">
+      <span class="cat-icon">💬</span>
+      <div class="cat-name">Phrases</div>
+      <div class="cat-desc">Daily greetings &amp; phrases</div>
+      <span class="cat-badge">6 phrases</span>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ PRACTICE PAGE ════════════════ -->
+<div class="page" id="page-practice">
+  <div class="prac-header">
+    <button class="back-btn" onclick="goHome()">← Back</button>
+    <div class="progress-dots" id="pdots"></div>
+    <div class="score-badge">⭐ <span id="score-val">0</span></div>
+  </div>
+
+  <div class="word-card" id="word-card">
+    <span class="word-emoji" id="w-emoji">🍎</span>
+    <div class="word-text" id="w-text">A</div>
+    <div class="word-hint" id="w-hint">like Apple</div>
+  </div>
+
+  <div class="action-row">
+    <button class="action-btn listen-btn" id="listen-btn" onclick="playWord()">🔊 Listen</button>
+    <button class="action-btn speak-btn" id="speak-btn" onclick="toggleSpeech()">🎤 Speak</button>
+  </div>
+
+  <div class="mic-wave" id="mic-wave">
+    <div class="wave-bar wb1"></div>
+    <div class="wave-bar wb2"></div>
+    <div class="wave-bar wb3"></div>
+    <div class="wave-bar wb4"></div>
+    <div class="wave-bar wb5"></div>
+  </div>
+
+  <div class="status-bar" id="status-bar">
+    👆 Press Listen first, then say the word!
+  </div>
+</div>
+
+<!-- ════════════════ RESULT OVERLAY ════════════════ -->
+<div class="overlay" id="overlay">
+  <div class="result-card">
+    <span class="result-icon" id="r-icon">🎉</span>
+    <div class="result-title" id="r-title">Amazing!</div>
+    <div class="result-said" id="r-said">You said it perfectly!</div>
+    <button class="res-btn next" id="r-next" onclick="nextWord()">Next Word →</button>
+    <button class="res-btn retry" onclick="retryWord()">🔄 Try Again</button>
+  </div>
+</div>
+
+<!-- ════════════════ COMPLETE SCREEN ════════════════ -->
+<div class="page" id="page-complete">
+  <div class="complete-card" id="complete-card">
+    <span class="complete-icon" id="c-icon">🏆</span>
+    <div class="complete-title" id="c-title">Fantastic!</div>
+    <div class="complete-sub" id="c-sub">You completed the practice!</div>
+    <div class="complete-bar-wrap">
+      <div class="complete-bar" id="c-bar" style="width:0%"></div>
+    </div>
+    <div class="complete-stats">
+      <div class="cstat">
+        <span class="cstat-num" id="c-correct">0</span>
+        <span class="cstat-lbl">Correct</span>
+      </div>
+      <div class="cstat">
+        <span class="cstat-num" id="c-total">0</span>
+        <span class="cstat-lbl">Total</span>
+      </div>
+      <div class="cstat">
+        <span class="cstat-num" id="c-pct">0%</span>
+        <span class="cstat-lbl">Score</span>
+      </div>
+    </div>
+    <button class="home-btn" onclick="goHome()">🏠 Play Again!</button>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════
+//  DATA
+// ══════════════════════════════
+const CATS = {
+  vowels:[
+    {word:'A',emoji:'🍎',hint:'like Apple'},
+    {word:'E',emoji:'🐘',hint:'like Elephant'},
+    {word:'I',emoji:'🍦',hint:'like Ice cream'},
+    {word:'O',emoji:'🍊',hint:'like Orange'},
+    {word:'U',emoji:'☂️',hint:'like Umbrella'},
+  ],
+  words:[
+    {word:'Cat',emoji:'🐱',hint:'a fluffy pet'},
+    {word:'Dog',emoji:'🐶',hint:'a loyal friend'},
+    {word:'Ball',emoji:'⚽',hint:'you can kick it'},
+    {word:'Sun',emoji:'☀️',hint:'shines in the sky'},
+    {word:'Tree',emoji:'🌳',hint:'grows in a park'},
+    {word:'Fish',emoji:'🐟',hint:'lives in water'},
+    {word:'Bird',emoji:'🐦',hint:'can fly high'},
+    {word:'Star',emoji:'⭐',hint:'shines at night'},
+    {word:'Moon',emoji:'🌙',hint:'in the night sky'},
+    {word:'Rain',emoji:'🌧️',hint:'falls from clouds'},
+  ],
+  phrases:[
+    {word:'Hello',emoji:'👋',hint:'a friendly greeting'},
+    {word:'Thank you',emoji:'🙏',hint:'show you are grateful'},
+    {word:'Good morning',emoji:'🌅',hint:'say at the start of the day'},
+    {word:'I love you',emoji:'❤️',hint:'show you care'},
+    {word:'Please',emoji:'😊',hint:'be kind and polite'},
+    {word:'Sorry',emoji:'🤗',hint:'when you made a mistake'},
+  ]
+};
+
+// ══════════════════════════════
+//  STATE
+// ══════════════════════════════
+let items=[], idx=0, score=0, recog=null, isRec=false;
+
+// ══════════════════════════════
+//  BUBBLES
+// ══════════════════════════════
+(()=>{
+  const cols=['#FF6B6B','#26D0CE','#A78BFA','#FFD93D','#74B9FF','#FF8ED4','#6BCB77','#FFA552'];
+  const wrap=document.getElementById('bubbles');
+  for(let i=0;i<20;i++){
+    const b=document.createElement('div');b.className='bubble';
+    const s=18+Math.random()*70;
+    b.style.cssText=`width:${s}px;height:${s}px;background:${cols[i%cols.length]};
+      left:${Math.random()*100}%;animation-duration:${9+Math.random()*11}s;
+      animation-delay:${Math.random()*12}s`;
+    wrap.appendChild(b);
+  }
+})();
+
+// ══════════════════════════════
+//  NAVIGATION
+// ══════════════════════════════
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function goHome(){
+  stopRec();
+  document.getElementById('overlay').classList.remove('show');
+  score=0;
+  showPage('page-home');
+}
+
+// ══════════════════════════════
+//  CATEGORY START
+// ══════════════════════════════
+function startCategory(cat){
+  items=[...CATS[cat]];
+  // shuffle
+  for(let i=items.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[items[i],items[j]]=[items[j],items[i]];}
+  idx=0;score=0;
+  document.getElementById('score-val').textContent='0';
+  buildDots();loadWord();
+  showPage('page-practice');
+  setStatus('👆 Press Listen first, then say the word!','');
+}
+
+function buildDots(){
+  const c=document.getElementById('pdots');c.innerHTML='';
+  items.forEach((_,i)=>{
+    const d=document.createElement('div');d.className='pdot'+(i===0?' current':'');
+    d.id='d'+i;c.appendChild(d);
+  });
+}
+function refreshDots(){
+  items.forEach((_,i)=>{
+    const d=document.getElementById('d'+i);if(!d)return;
+    d.className='pdot'+(i<idx?'done':i===idx?'current':'');
+    if(i<idx)d.className='pdot done';
+    else if(i===idx)d.className='pdot current';
+    else d.className='pdot';
+  });
+}
+function loadWord(){
+  const it=items[idx];
+  document.getElementById('w-emoji').textContent=it.emoji;
+  document.getElementById('w-text').textContent=it.word;
+  document.getElementById('w-hint').textContent=it.hint;
+  refreshDots();
+  const sb=document.getElementById('speak-btn');
+  sb.disabled=false;sb.classList.remove('recording');sb.innerHTML='🎤 Speak';
+  document.getElementById('mic-wave').classList.remove('active');
+}
+
+// ══════════════════════════════
+//  TTS
+// ══════════════════════════════
+function playWord(){
+  const it=items[idx];
+  const utter=new SpeechSynthesisUtterance(it.word);
+  utter.rate=0.72;utter.pitch=1.15;
+  const voices=speechSynthesis.getVoices();
+  const v=voices.find(x=>/Samantha|Karen|Moira|Veena|Google UK/.test(x.name))||voices[0];
+  if(v)utter.voice=v;
+  speechSynthesis.cancel();speechSynthesis.speak(utter);
+  setStatus('🔊 Listen carefully...','listening');
+  utter.onend=()=>setStatus('🎤 Now your turn! Press Speak!','');
+}
+
+// ══════════════════════════════
+//  SPEECH RECOGNITION
+// ══════════════════════════════
+let audioContext=null;
+let analyser=null;
+
+function toggleSpeech(){if(isRec)stopRec();else startRec();}
+
+function startRec(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){
+    setStatus('❌ Use Chrome, Edge, or Safari','wrong');
+    return;
+  }
+  
+  initRecognition();
+
+  function initRecognition(){
+    recog=new SR();
+    recog.lang='en-US';
+    recog.continuous=true;  // Keep listening
+    recog.interimResults=true;  // Get live results
+    recog.maxAlternatives=1;
+    
+    let speechDetected=false;
+    let timeout;
+
+    recog.onstart=()=>{
+      isRec=true;
+      speechDetected=false;
+      clearTimeout(timeout);
+      
+      const btn=document.getElementById('speak-btn');
+      btn.classList.add('recording');
+      btn.innerHTML='⏹ STOP';
+      document.getElementById('mic-wave').classList.add('active');
+      setStatus('🔴 LISTENING... speak NOW!','listening');
+      console.log('🎤 Started listening');
+      
+      // Auto-stop after 8 seconds if no speech detected
+      timeout=setTimeout(()=>{
+        if(!speechDetected){
+          console.log('Timeout: no speech detected');
+          stopRec();
+          setStatus('⏱️ Time\'s up! Try again!','wrong');
+        }
+      },8000);
+    };
+
+    recog.onresult=e=>{
+      clearTimeout(timeout);
+      let interimText='';
+      let finalText='';
+      
+      for(let i=0;i<e.results.length;i++){
+        const transcript=e.results[i][0].transcript.toLowerCase().trim();
+        if(e.results[i].isFinal){
+          finalText=transcript;
+          speechDetected=true;
+        }else{
+          interimText=transcript;
+        }
+      }
+      
+      const display=finalText||interimText;
+      if(display){
+        setStatus('📝 You said: "'+display+'"','listening');
+        console.log('Interim:',interimText,'Final:',finalText);
+      }
+      
+      // If we got a final result, process it
+      if(finalText){
+        console.log('✅ Final result:',finalText);
+        stopRec();
+        
+        const target=items[idx].word.toLowerCase();
+        console.log('🎯 Target:',target);
+        
+        // Simple matching
+        const match=
+          finalText===target||
+          finalText.includes(target)||
+          target.includes(finalText)||
+          finalText.split(' ').some(w=>w===target);
+        
+        if(match){
+          handleCorrect(finalText);
+        }else{
+          handleWrong(finalText);
+        }
+      }
+    };
+
+    recog.onerror=e=>{
+      console.error('🚨 Error:',e.error);
+      stopRec();
+      
+      const msgs={
+        'no-speech':'🔊 No sound detected! SPEAK LOUDER!',
+        'not-allowed':'🚫 Mic access denied',
+        'audio-capture':'❌ No microphone',
+        'network':'🌐 No internet',
+        'service-not-allowed':'🚫 Mic blocked',
+        'bad-grammar':'⚠️ Unclear speech'
+      };
+      setStatus(msgs[e.error]||'❌ Error: '+e.error,'wrong');
+    };
+
+    recog.onend=()=>{
+      clearTimeout(timeout);
+      isRec=false;
+      document.getElementById('mic-wave').classList.remove('active');
+      console.log('Recording stopped');
+    };
+    
+    try{
+      recog.start();
+    }catch(err){
+      console.error('Failed to start:',err);
+      setStatus('❌ Refresh and try again','wrong');
+    }
+  }
+}
+
+function stopRec(){
+  if(recog){try{recog.stop();}catch(e){}}
+  isRec=false;
+  const btn=document.getElementById('speak-btn');
+  btn.classList.remove('recording');btn.innerHTML='🎤 Speak';
+  document.getElementById('mic-wave').classList.remove('active');
+}
+
+// Simple Levenshtein for short words
+function levenshtein(a,b){
+  const m=a.length,n=b.length,dp=Array.from({length:m+1},(_,i)=>[i,...Array(n).fill(0)]);
+  for(let j=0;j<=n;j++)dp[0][j]=j;
+  for(let i=1;i<=m;i++)for(let j=1;j<=n;j++)
+    dp[i][j]=a[i-1]===b[j-1]?dp[i-1][j-1]:1+Math.min(dp[i-1][j],dp[i][j-1],dp[i-1][j-1]);
+  return dp[m][n];
+}
+
+// ══════════════════════════════
+//  FEEDBACK
+// ══════════════════════════════
+function handleCorrect(said){
+  score++;document.getElementById('score-val').textContent=score;
+  spawnConfetti();spawnStars();
+  const praises=['Amazing! 🎉','Wonderful! ✨','Great job! 🌟','Superstar! ⭐','You did it! 🎊','Brilliant! 🌈','Perfect! 💫'];
+  showOverlay('🎉',praises[Math.floor(Math.random()*praises.length)],'ok',
+    `You said "${said}" — keep it up!`,idx>=items.length-1?'🏆 Finish!':'Next Word →');
+}
+function handleWrong(said){
+  const card=document.getElementById('word-card');
+  card.classList.add('shake');setTimeout(()=>card.classList.remove('shake'),600);
+  const target=items[idx].word;
+  
+  let msg;
+  if(!said){
+    msg=`I didn't hear anything. Say "${target}" LOUDLY!`;
+  }else{
+    msg=`I heard "${said}". Say "${target}" clearly!`;
+  }
+  
+  showOverlay('😊','Keep Trying!','ng',msg,'Skip →');
+}
+
+function showOverlay(icon,title,cls,msg,nextTxt){
+  document.getElementById('r-icon').textContent=icon;
+  document.getElementById('r-title').textContent=title;
+  document.getElementById('r-title').className='result-title '+cls;
+  document.getElementById('r-said').textContent=msg;
+  document.getElementById('r-next').textContent=nextTxt;
+  document.getElementById('overlay').classList.add('show');
+}
+
+function nextWord(){
+  document.getElementById('overlay').classList.remove('show');
+  idx++;
+  if(idx>=items.length){showComplete();}
+  else{loadWord();setStatus('👆 Press Listen first, then say the word!','');}
+}
+function retryWord(){
+  document.getElementById('overlay').classList.remove('show');
+  setStatus('🎤 Try again! Press Speak!','');
+}
+
+// ══════════════════════════════
+//  COMPLETE SCREEN
+// ══════════════════════════════
+function showComplete(){
+  const total=items.length,pct=Math.round(score/total*100);
+  let icon='🏆',title='Outstanding! 🎊',sub='You\'re a superstar speaker!';
+  if(pct<80&&pct>=50){icon='⭐';title='Great effort! 👏';sub='You\'re getting better every day!';}
+  else if(pct<50){icon='💪';title='Keep going! 😊';sub='Practice makes perfect!';}
+  document.getElementById('c-icon').textContent=icon;
+  document.getElementById('c-title').textContent=title;
+  document.getElementById('c-sub').textContent=sub;
+  document.getElementById('c-correct').textContent=score;
+  document.getElementById('c-total').textContent=total;
+  document.getElementById('c-pct').textContent=pct+'%';
+  showPage('page-complete');
+  setTimeout(()=>{document.getElementById('c-bar').style.width=pct+'%';},100);
+  if(pct>=50){spawnConfetti();spawnStars();}
+}
+
+// ══════════════════════════════
+//  HELPERS
+// ══════════════════════════════
+function setStatus(msg,type){
+  const el=document.getElementById('status-bar');
+  el.textContent=msg;el.className='status-bar'+(type?' '+type:'');
+}
+
+// ══════════════════════════════
+//  PARTICLE EFFECTS
+// ══════════════════════════════
+function spawnConfetti(){
+  const cols=['#FF6B6B','#26D0CE','#FFD93D','#6BCB77','#A78BFA','#FF8ED4','#74B9FF','#FFA552'];
+  for(let i=0;i<70;i++){
+    const c=document.createElement('div');c.className='confetti-bit';
+    const s=8+Math.random()*10;
+    c.style.cssText=`left:${Math.random()*100}vw;width:${s}px;height:${s}px;
+      background:${cols[Math.floor(Math.random()*cols.length)]};
+      border-radius:${Math.random()>.45?'50%':'3px'};
+      animation-duration:${1.4+Math.random()*2}s;animation-delay:${Math.random()*.6}s`;
+    document.body.appendChild(c);
+    c.addEventListener('animationend',()=>c.remove());
+  }
+}
+function spawnStars(){
+  for(let i=0;i<10;i++){
+    const s=document.createElement('div');s.className='star-burst';
+    s.textContent=['⭐','🌟','✨','💫'][Math.floor(Math.random()*4)];
+    s.style.cssText=`left:${15+Math.random()*70}vw;top:${15+Math.random()*70}vh;
+      animation-delay:${Math.random()*.4}s`;
+    document.body.appendChild(s);
+    s.addEventListener('animationend',()=>s.remove());
+  }
+}
+
+// Preload voices
+window.speechSynthesis.onvoiceschanged=()=>speechSynthesis.getVoices();
+
+// ══════════════════════════════
+//  MICROPHONE TEST
+// ══════════════════════════════
+function testMicrophone(){
+  console.log('Starting mic test...');
+  
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){
+    alert('❌ Your browser does not support speech recognition.\n\nUse: Chrome, Edge, or Safari');
+    return;
+  }
+  
+  let testRecog=new SR();
+  testRecog.lang='en-US';
+  testRecog.continuous=true;
+  testRecog.interimResults=true;
+  
+  let heardSomething=false;
+  let timeout;
+  
+  // Show testing message
+  const origStatus=document.getElementById('status-bar').textContent;
+  setStatus('🎤 Testing microphone... say something!','listening');
+  
+  testRecog.onstart=()=>{
+    console.log('🎤 Test started - speak into your microphone');
+    timeout=setTimeout(()=>{
+      testRecog.abort();
+      if(!heardSomething){
+        setStatus('❌ No sound detected. Check your microphone!','wrong');
+        alert('❌ MICROPHONE TEST FAILED\n\nNo sound detected.\n\nFix:\n1. Check microphone is plugged in\n2. Check volume is not muted\n3. Try another app (Discord/Zoom) to test\n4. Refresh this page and try again');
+      }
+    },4000);
+  };
+  
+  testRecog.onresult=e=>{
+    for(let i=0;i<e.results.length;i++){
+      if(e.results[i][0].transcript.trim().length>0){
+        heardSomething=true;
+        const heard=e.results[i][0].transcript;
+        console.log('✅ Heard:',heard);
+        testRecog.abort();
+        setStatus('✅ Microphone works! Heard: "'+heard+'"','correct');
+        alert('✅ SUCCESS!\n\nYour microphone is working!\n\nHeard: "'+heard+'"\n\nNow try the speech practice app!');
+        break;
+      }
+    }
+  };
+  
+  testRecog.onerror=e=>{
+    console.error('Test error:',e.error);
+    testRecog.abort();
+    const msgs={
+      'no-speech':'❌ No speech detected',
+      'not-allowed':'❌ Microphone access denied',
+      'audio-capture':'❌ No microphone found',
+      'network':'❌ Network error',
+      'service-not-allowed':'❌ Mic blocked'
+    };
+    const msg=msgs[e.error]||'❌ Error: '+e.error;
+    setStatus(msg,'wrong');
+    alert('🚫 MICROPHONE PROBLEM\n\nError: '+msg+'\n\nFix:\n1. Grant microphone permission when asked\n2. Check browser settings\n3. Try a different browser\n4. Refresh the page');
+  };
+  
+  try{
+    testRecog.start();
+  }catch(err){
+    console.error('Test start failed:',err);
+    alert('Failed to start test. Refresh page.');
+  }
+}
+</script>
+</body>
+</html>
