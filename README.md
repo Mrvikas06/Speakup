@@ -1,4 +1,5 @@
 # 🌟 SpeakUp! - Speech Practice for Kids
+# https://mrvikas06.github.io/Speakup/
 
 A fun, interactive app that helps kids practice speaking with real-time speech recognition!
 
