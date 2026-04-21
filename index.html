@@ -467,7 +467,20 @@ function startRec(){
     return;
   }
   
-  initRecognition();
+  // Create recognizer ONCE if not exists
+  if(!recog){
+    initRecognition();
+  }
+  
+  // Just start it (don't reinit)
+  try{
+    isRec=true;
+    recog.start();
+    console.log('🎤 Recognition started');
+  }catch(err){
+    console.error('Error starting:',err);
+    setStatus('❌ Error starting mic','wrong');
+  }
 
   function initRecognition(){
     recog=new SR();
@@ -489,17 +502,17 @@ function startRec(){
       btn.disabled=true;
       btn.innerHTML='⏹ STOP';
       document.getElementById('mic-wave').classList.add('active');
-      setStatus('🔴 LISTENING... speak NOW!','listening');
-      console.log('🎤 Started listening');
+      setStatus('🔴 LISTENING... speak anytime in the next 30 seconds!','listening');
+      console.log('🎤 Started listening - you have 30 seconds to speak');
       
-      // Auto-stop after 15 seconds if no speech detected
+      // Very long timeout - 30 seconds
       timeout=setTimeout(()=>{
+        console.log('⏱️ Final timeout: 30 seconds elapsed');
+        stopRec();
         if(!speechDetected){
-          console.log('⏱️ Timeout: no speech detected');
-          stopRec();
-          setStatus('⏱️ Time\'s up! Didn\'t hear anything. Try again!','wrong');
+          setStatus('⏱️ Time\'s up! Try again!','wrong');
         }
-      },15000);
+      },30000);
     };
 
     recog.onresult=e=>{
@@ -568,26 +581,38 @@ function startRec(){
     };
 
     recog.onerror=e=>{
-      console.error('🚨 Error:',e.error);
-      
-      // Don't stop yet - sometimes this error can be transient
-      const btn=document.getElementById('speak-btn');
+      console.error('🚨 Error:',e.error,'at time:',new Date().getTime());
       
       const msgs={
-        'no-speech':'🔊 No sound detected yet. Keep speaking LOUDER!',
-        'not-allowed':'🚫 Mic access denied. Check browser settings.',
-        'audio-capture':'❌ No microphone found. Check hardware.',
-        'network':'🌐 No internet connection.',
-        'service-not-allowed':'🚫 Mic blocked. Check browser settings.',
-        'bad-grammar':'⚠️ Unclear speech. Speak more clearly!',
-        'aborted':'⏸️ Recording was stopped.'
+        'no-speech':'🔊 Still waiting... SPEAK NOW LOUDLY!',
+        'not-allowed':'🚫 Mic denied. Check browser settings.',
+        'audio-capture':'❌ No microphone. Check hardware.',
+        'network':'🌐 No internet.',
+        'service-not-allowed':'🚫 Mic blocked.',
+        'bad-grammar':'⚠️ Unclear. Speak more clearly!',
+        'aborted':'⏸️ Stopped.'
       };
-      const msg=msgs[e.error]||'❌ Error: '+e.error;
-      setStatus(msg,'wrong');
+      const msg=msgs[e.error]||'❌ '+e.error;
+      setStatus(msg,'listening');
+      console.log('Setting status to:',msg);
       
-      // Only stop on certain errors
+      // Critical errors: stop completely
       if(e.error==='not-allowed'||e.error==='audio-capture'||e.error==='service-not-allowed'){
+        console.log('Critical error - stopping recognition');
         stopRec();
+      }
+      // No-speech error: this happens when no sound detected. Restart to keep listening
+      else if(e.error==='no-speech'){
+        console.log('No-speech detected. Restarting listening...');
+        try{
+          recog.abort();  // Cleanly abort first
+          setTimeout(()=>{
+            console.log('Calling recog.start() again');
+            recog.start();
+          },100);
+        }catch(err){
+          console.error('Error restarting:',err);
+        }
       }
     };
 
@@ -597,13 +622,6 @@ function startRec(){
       document.getElementById('mic-wave').classList.remove('active');
       console.log('Recording stopped');
     };
-    
-    try{
-      recog.start();
-    }catch(err){
-      console.error('Failed to start:',err);
-      setStatus('❌ Refresh and try again','wrong');
-    }
   }
 }
 
