@@ -492,14 +492,14 @@ function startRec(){
       setStatus('🔴 LISTENING... speak NOW!','listening');
       console.log('🎤 Started listening');
       
-      // Auto-stop after 10 seconds if no speech detected
+      // Auto-stop after 15 seconds if no speech detected
       timeout=setTimeout(()=>{
         if(!speechDetected){
           console.log('⏱️ Timeout: no speech detected');
           stopRec();
-          setStatus('⏱️ Time\'s up! Try again!','wrong');
+          setStatus('⏱️ Time\'s up! Didn\'t hear anything. Try again!','wrong');
         }
-      },10000);
+      },15000);
     };
 
     recog.onresult=e=>{
@@ -569,17 +569,26 @@ function startRec(){
 
     recog.onerror=e=>{
       console.error('🚨 Error:',e.error);
-      stopRec();
+      
+      // Don't stop yet - sometimes this error can be transient
+      const btn=document.getElementById('speak-btn');
       
       const msgs={
-        'no-speech':'🔊 No sound detected! SPEAK LOUDER!',
-        'not-allowed':'🚫 Mic access denied',
-        'audio-capture':'❌ No microphone',
-        'network':'🌐 No internet',
-        'service-not-allowed':'🚫 Mic blocked',
-        'bad-grammar':'⚠️ Unclear speech'
+        'no-speech':'🔊 No sound detected yet. Keep speaking LOUDER!',
+        'not-allowed':'🚫 Mic access denied. Check browser settings.',
+        'audio-capture':'❌ No microphone found. Check hardware.',
+        'network':'🌐 No internet connection.',
+        'service-not-allowed':'🚫 Mic blocked. Check browser settings.',
+        'bad-grammar':'⚠️ Unclear speech. Speak more clearly!',
+        'aborted':'⏸️ Recording was stopped.'
       };
-      setStatus(msgs[e.error]||'❌ Error: '+e.error,'wrong');
+      const msg=msgs[e.error]||'❌ Error: '+e.error;
+      setStatus(msg,'wrong');
+      
+      // Only stop on certain errors
+      if(e.error==='not-allowed'||e.error==='audio-capture'||e.error==='service-not-allowed'){
+        stopRec();
+      }
     };
 
     recog.onend=()=>{
